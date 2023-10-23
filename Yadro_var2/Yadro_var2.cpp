@@ -17,9 +17,9 @@ double mistake(vector<ftype> x, vector<ftype> x_change) {
     double res = 0;
     for (int i = 0; i < N; i++) {
         double mist = abs(x[i].real() - x_change[i].real());
-        if (mist < 100) {
-            cout << "Good!!!" << endl;
-        }
+        //if (mist < 100) {
+        //    cout << "Good!!!" << endl;
+        //}
         res += mist;
         
     }
@@ -28,9 +28,12 @@ double mistake(vector<ftype> x, vector<ftype> x_change) {
 
 }
 
-int main()
+int main(int argc, char** argv)
 {
-    vector<ftype> x = create_double_vector(100);
+    int n = 1000;
+    if(argc >= 2)
+        n = atoi(argv[1]);
+    vector<ftype> x = create_double_vector(n);
     FFT* solver = new FFT(x);
     vector<ftype> res = solver->DFT_slow();
     vector<ftype> res2 = solver->FFT_fast(x);
