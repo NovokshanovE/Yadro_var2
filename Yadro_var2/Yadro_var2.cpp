@@ -1,18 +1,62 @@
+﻿#include "FFT.h"
+#include <random>
 
-#include <iostream>
+vector<ftype> create_double_vector(int n) {
+    mt19937 gen(1701);
+    cauchy_distribution<> distr(-0000., 1000.);
+    vector<ftype> res;
+    for (int i = 0; i < n; i++) {
+        res.push_back(ftype(distr(gen), distr(gen)) );
+
+    }
+    return res;
+}
+
+double mistake(vector<ftype> x, vector<ftype> x_change) {
+    int N = x.size();
+    double res = 0;
+    for (int i = 0; i < N; i++) {
+        double mist = abs(x[i].real() - x_change[i].real());
+        if (mist < 100) {
+            cout << "Good!!!" << endl;
+        }
+        res += mist;
+        
+    }
+    res /= N;
+    return res;
+
+}
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    vector<ftype> x = create_double_vector(100);
+    FFT* solver = new FFT(x);
+    vector<ftype> res = solver->DFT_slow();
+    vector<ftype> res2 = solver->FFT_fast(x);
+    vector<ftype> res3 = solver->FFT_reverse();
+    cout << "----------\nDFT:\n" << endl;
+    solver->print(res);
+    cout << "----------\nFFT:\n" << endl;
+    solver->print(res2);
+    cout << "----------\nFFT reverse:\n" << endl;
+    solver->print(res3);
+    cout << "----------" << endl;
+    cout << "----------" << endl;
+    solver->print(solver->get_x());
+    cout << "----------" << endl;
+    cout << "----------" << endl;
+    cout << "Mistake for DFT:" << mistake(solver->get_x(), res) << endl;
+    cout << "----------" << endl;
+    cout << "----------" << endl;
+    cout << "Mistake for FFT:" << mistake(solver->get_x(), res2) << endl;
+    cout << "----------" << endl;
+    cout << "----------" << endl;
+    cout << "Mistake for reverse FFT:" << mistake(solver->get_x(), res3) << endl;
+
+
+
+
+
 }
 
-// Run program: Ctrl + F5 or Debug > Start Without Debugging menu
-// Debug program: F5 or Debug > Start Debugging menu
-
-// Tips for Getting Started: 
-//   1. Use the Solution Explorer window to add/manage files
-//   2. Use the Team Explorer window to connect to source control
-//   3. Use the Output window to see build output and other messages
-//   4. Use the Error List window to view errors
-//   5. Go to Project > Add New Item to create new code files, or Project > Add Existing Item to add existing code files to the project
-//   6. In the future, to open this project again, go to File > Open > Project and select the .sln file
